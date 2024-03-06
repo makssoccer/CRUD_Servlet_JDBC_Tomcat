@@ -14,7 +14,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,6 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-
 class DeckServiceImplTest {
     @Mock
     private DeckRepository deckRepository;
@@ -71,7 +69,7 @@ class DeckServiceImplTest {
         List<Integer> cardId = new ArrayList<>();
         cardId.add(card.getId());
 
-        DeckDto QueryUpdateDto = new DeckDto(1, "update",null, cardId,null);//конвертированная Dto c JSON
+        DeckDto QueryUpdateDto = new DeckDto(1, "update", null, cardId, null);//конвертированная Dto c JSON
         Deck update = new Deck(1, "update", cardList);
         when(deckRepository.update(update)).thenReturn(Optional.of(update));
 
@@ -80,7 +78,7 @@ class DeckServiceImplTest {
 
         List<String> cardName = new ArrayList<>();
         cardName.add(card.getCardName());
-        DeckDto returnUpdateDto = new DeckDto(1, "update",cardName);//Пришедшая Dto после update
+        DeckDto returnUpdateDto = new DeckDto(1, "update", cardName);//Пришедшая Dto после update
 
 
         assertEquals(returnDto, returnUpdateDto);

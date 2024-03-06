@@ -72,20 +72,24 @@ public class PlayerRepositoryImpl implements PlayerRepository {
     @Override
     public Optional<Player> update(Player player) {
         try (Connection connection = dataSource.getConnection()) {
-
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_DECK_QUERY)) {
+            connection.setAutoCommit(false);
+            if (player.getDeck()!= null) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_DECK_QUERY)) {
+                    preparedStatement.setInt(1, player.getId());
+                    preparedStatement.setInt(2, player.getDeck().getId());
+                    preparedStatement.executeUpdate();
+                }
                 player = getDeckEntity(player);
-                preparedStatement.setInt(1, player.getId());
-                preparedStatement.setInt(2, player.getDeck().getId());
-                preparedStatement.executeUpdate();
             }
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_QUERY)) {
                 preparedStatement.setString(1, player.getName());
-                preparedStatement.setInt(2, player.getDeck().getId());
+                // Если id deck нет, то в БД сохраняется 0
+                preparedStatement.setInt(2, player.getDeck() == null ? 0 : player.getDeck().getId() );
                 preparedStatement.setInt(3, player.getId());
                 int rowsUpdated = preparedStatement.executeUpdate();
                 if (rowsUpdated > 0) {
+                    connection.commit();
                     return Optional.of(player);
                 }
             }

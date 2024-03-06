@@ -17,8 +17,8 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-@ExtendWith(MockitoExtension.class)
 
+@ExtendWith(MockitoExtension.class)
 class CardServiceImplTest {
     @Mock
     private CardRepository cardRepository;
@@ -28,7 +28,7 @@ class CardServiceImplTest {
     private CardServiceImpl cardService;
 
     private Card card = new Card(1, "test_card", 5);
-    private CardDto cardDto = new CardDto(1, "test_card",5);
+    private CardDto cardDto = new CardDto(1, "test_card", 5);
 
     @Test
     void testCreate_returnCardDto() {

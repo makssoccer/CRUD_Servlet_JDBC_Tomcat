@@ -74,13 +74,16 @@ public class DeckRepositoryImpl implements DeckRepository {
     public Optional<Deck> update(Deck deck) {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CARD_QUERY)) {
-                for (Card card : deck.getCards()) {
-                    preparedStatement.setInt(1, deck.getId());
-                    preparedStatement.setInt(2, card.getId());
-                    preparedStatement.addBatch();
+            if (deck.getCards() != null) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CARD_QUERY)) {
+                    for (Card card : deck.getCards()) {
+                        preparedStatement.setInt(1, deck.getId());
+                        preparedStatement.setInt(2, card.getId());
+                        preparedStatement.addBatch();
+                    }
+                    preparedStatement.executeBatch();
                 }
-                preparedStatement.executeBatch();
+                deck = getCardsEntity(deck);
             }
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_QUERY)) {
@@ -89,7 +92,6 @@ public class DeckRepositoryImpl implements DeckRepository {
                 int rowsUpdated = preparedStatement.executeUpdate();
                 if (rowsUpdated > 0) {
                     connection.commit();
-                    deck = getCardsEntity(deck);
                     return Optional.of(deck);
                 }
             }
@@ -115,7 +117,9 @@ public class DeckRepositoryImpl implements DeckRepository {
         Deck deck = new Deck();
         deck.setId(resultSet.getInt("id"));
         deck.setDeckName(resultSet.getString("deck_name"));
-        deck.setPlayer(new Player(resultSet.getInt("player_id")));
+        if(resultSet.getInt("player_id")!=0){
+            deck.setPlayer(new Player(resultSet.getInt("player_id")));
+        }
         return deck;
     }
 
