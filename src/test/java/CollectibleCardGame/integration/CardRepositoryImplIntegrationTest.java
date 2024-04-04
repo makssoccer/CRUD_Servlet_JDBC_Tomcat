@@ -6,10 +6,12 @@ import org.example.repository.impl.CardRepositoryImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardRepositoryImplIntegrationTest {
@@ -64,11 +66,12 @@ class CardRepositoryImplIntegrationTest {
         // Assert
         assertEquals(3, cards.size());
     }
+
     @Test
     void getById_ShouldReturnDeck_WhenValidIdPassed() throws SQLException {
         // Arrange
-        Card card = new Card(1,"Test Deck",7);
-        insertTestCard("Test Deck",7);
+        Card card = new Card(1, "Test Deck", 7);
+        insertTestCard("Test Deck", 7);
 
         // Act
         Optional<Card> retrievedDeck = cardRepository.getById(card.getId());
@@ -80,8 +83,8 @@ class CardRepositoryImplIntegrationTest {
     @Test
     void update_ShouldUpdateDeck_WhenValidDeckPassed() throws SQLException {
         // Arrange
-        Card card = new Card(1,"Test Card",8);
-        insertTestCard("Test Card",8);
+        Card card = new Card(1, "Test Card", 8);
+        insertTestCard("Test Card", 8);
         card.setCardName("Updated Deck");
 
         // Act
@@ -94,7 +97,7 @@ class CardRepositoryImplIntegrationTest {
     @Test
     void delete_ShouldDeleteCard_WhenValidIdPassed() throws SQLException {
         // Arrange
-        Card card = new Card(1,"Test Card", 10);
+        Card card = new Card(1, "Test Card", 10);
         insertTestCard("Test Card", 10);
 
         // Act
